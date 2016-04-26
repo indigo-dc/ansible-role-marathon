@@ -12,22 +12,29 @@
   apt: name="openjdk-7-jre-headless" state=present
 
 
-- name: generate keystore with random password
-  vars: 
-    key_password: "{{marathon_key_randpassword.stdout}}"
-    pkcs_password: "{{marathon_jks_randpassword.stdout}}"
-    jks_password: "{{marathon_jks_randpassword.stdout}}"
-  include: enable_ssl.yml
-  when: generate_random_pass == "true"
+- name: Check that the certificates exists
+  stat: path=marathon.key
+  register: marathon_key
+- block:
 
-
-- name: generate keystore
-  vars:
-    key_password: "{{marathon_key_password}}"
-    pkcs_password: "{{marathon_jks_password}}"
-    jks_password: "{{marathon_jks_password}}"
-  include: enable_ssl.yml
-  when: generate_random_pass != "true"
+    - name: generate keystore with random password
+      vars: 
+        key_password: "{{marathon_key_randpassword.stdout}}"
+        pkcs_password: "{{marathon_jks_randpassword.stdout}}"
+        jks_password: "{{marathon_jks_randpassword.stdout}}"
+      include: enable_ssl.yml
+      when: generate_random_pass == "true"
+    
+    
+    - name: generate keystore
+      vars:
+        key_password: "{{marathon_key_password}}"
+        pkcs_password: "{{marathon_jks_password}}"
+        jks_password: "{{marathon_jks_password}}"
+      include: enable_ssl.yml
+      when: generate_random_pass != "true"
+    
+  when: marathon_key.stat.exists == False
 
 
 - name: run marathon container
