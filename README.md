@@ -1,38 +1,44 @@
-Role Name
+Marathon Role
 =========
 
-A brief description of the role goes here.
+Configure and start Marathon (Mesos Framework) in a docker container using the image `indigodatacloud/marathon:latest`. 
 
-Requirements
-------------
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+This role has been specifically developed to be used for the deployment of Mesos in the framework of INDIGO-DataCloud project.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+- `zookeeper_client_port` (default: 2181)
+- `zookeeper_peers` (optional): list of zookeeper server nodes - alternatively, you can use a proper inventory file specifying the hosts group [zookeeper_servers]
+
+- `marathon_version` (default: latest)
+- `marathon_image` (default: indigodatacloud/marathon:{{marathon_version}}) 
+- `marathon_framework_name` (default: marathon): name that will be used to register the framework on Mesos
+
+SSL specific options:
+- `marathon_password`: password for basic auth
+- `marathon_username`(default: admin): username for basic auth
+- `generate_random_pass` (default: true): if set to true, the password used for creating the self-signed certificate are generated in a random way
+- `marathon_key_password` (to be provided if `generate_random_pass`=false)
+- `marathon_pkcs_password` (to be provided if `generate_random_pass`=false)
+- `marathon_jks_password` (to be provided if `generate_random_pass`=false)
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+- `indigo-dc.docker`
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+         - { role: indigo-dc.marathon, zookeeper_peers: ["10.10.10.1", "10.10.10.2", "10.10.10.3" ] }
 
 License
 -------
 
-BSD
+Apache Licence v2 [1]
 
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+[1] http://www.apache.org/licenses/LICENSE-2.0
