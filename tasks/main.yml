@@ -67,5 +67,7 @@
     script: "curl -k -u {{marathon_username}}:{{marathon_password}} https://{{marathon_hostname}}:{{marathon_https_port}}"
     interval: 10s
     tags: marathon
+  when: consul_installed == "yes" 
 
 - include: apps.yml
+  when: consul_installed == "yes"
