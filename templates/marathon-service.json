@@ -1,0 +1,12 @@
+{
+  "ID": "marathon",
+  "Name": "marathon",
+  "Node": "{{ ansible_hostname }}",
+  "Address": "{{ansible_default_ipv4.address}}",
+  "Port": {{marathon_https_port}},
+  "Tags": [ "marathon" ],
+  "check": {
+     "script": "curl -k -u {{marathon_username}}:{{marathon_password}} https://{{marathon_hostname}}:{{marathon_https_port}}",
+     "interval": "10s"
+   }
+}
