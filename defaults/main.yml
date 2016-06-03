@@ -76,3 +76,6 @@ mesos_consul_app_json: '{
   "cpus": 0.1,
   "mem": 256
 }' 
+
+service_discovery: "consul"
+
