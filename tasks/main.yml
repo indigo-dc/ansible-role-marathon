@@ -1,13 +1,3 @@
-- name: generate marathon key password
-  shell: head /dev/urandom | tr -dc A-Za-z0-9 | head -c10
-  register: marathon_key_randpassword
-  when: generate_random_pass == "true"
-
-- name: generate marathon jks password
-  shell: head /dev/urandom | tr -dc A-Za-z0-9 | head -c10
-  register: marathon_jks_randpassword
-  when: generate_random_pass == "true"
-
 - name: Install openjdk
   apt: name="openjdk-7-jre-headless" state=present
 
@@ -17,31 +7,22 @@
   register: marathon_key
 - block:
 
-    - name: generate keystore with random password
-      vars: 
-        key_password: "{{marathon_key_randpassword.stdout}}"
-        pkcs_password: "{{marathon_jks_randpassword.stdout}}"
-        jks_password: "{{marathon_jks_randpassword.stdout}}"
-      include: enable_ssl.yml
-      when: generate_random_pass == "true"
-    
-    
     - name: generate keystore
       vars:
         key_password: "{{marathon_key_password}}"
         pkcs_password: "{{marathon_jks_password}}"
         jks_password: "{{marathon_jks_password}}"
       include: enable_ssl.yml
-      when: generate_random_pass != "true"
     
   when: marathon_key.stat.exists == False
+  tags: marathon
 
 
 - name: run marathon container
   docker:
     name: marathon
     image: "{{ marathon_image }}"
-    state: started
+    state: reloaded
     detach: true
     restart_policy: always
     net: host
@@ -55,7 +36,7 @@
       MARATHON_ZK: "{{ marathon_zk_peers }}/{{ marathon_framework_name }}" 
       MARATHON_FRAMEWORK_NAME: "{{ marathon_framework_name }}"
       MARATHON_HTTPS_PORT: "{{ marathon_https_port }}"
-      MARATHON_SSL_KEYSTORE_PASSWORD: "{{ marathon_ssl_ks_password }}"
+      MARATHON_SSL_KEYSTORE_PASSWORD: "{{ marathon_jks_password }}"
       MARATHON_SSL_KEYSTORE_PATH: "{{ marathon_keystore_path }}"
       MARATHON_HTTP_CREDENTIALS: "{{marathon_username}}:{{marathon_password}}"
   tags: marathon

@@ -25,22 +25,13 @@ marathon_zk_peers: "zk://{{ zookeeper_peers_nodes }}"
 # Note: marathon-consul checks the certificate CN against the host marathon.service.consul
 openssl_self_signed:
  - { name : "marathon.service.consul" }
-generate_random_pass: "true"
-marathon_key_password: "password"
-marathon_pkcs_password: "password"
-marathon_jks_password: "password"
+marathon_key_password: "hCBWfORMLs6A"
+marathon_pkcs_password: "MLD6eQnjIVhj"
+marathon_jks_password: "ZpUEGgvzQhpo"
 marathon_username: "admin"
 #marathon_password: "secr3t" --> MANDATORY PARAM
 marathon_https_port: '8443'
 marathon_keystore_path: '/etc/marathon/ssl_keystore.jks'
-
-marathon_ssl_ks_password: "
-   {%- if generate_random_pass|string() == 'true' -%}
-            {{ marathon_jks_randpassword.stdout  }}
-   {%- else -%}
-            {{ marathon_jks_password }}
-   {%- endif -%}
-"
 
 marathon_consul_version: 'latest'
 marathon_consul_image: "ciscocloud/marathon-consul:{{marathon_consul_version}}"
