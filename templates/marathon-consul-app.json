@@ -1,0 +1,23 @@
+{
+  "id": "marathon-consul",
+  "args": ["--registry=http://consul.service.consul:8500 --marathon-protocol=https --marathon-username={{marathon_username}} --marathon-password={{marathon_password}} --marathon-location=marathon.service.consul:{{marathon_https_port}}"],
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "{{marathon_consul_image}}",
+      "network": "BRIDGE",
+      "portMappings": [{"containerPort": 4000, "hostPort": 0, "protocol": "tcp"}]
+    },
+    "volumes": [
+      {
+        "containerPath": "/usr/local/share/ca-certificates",
+        "hostPath": "/usr/local/share/ca-certificates/",
+        "mode": "RO"
+      },
+     ]
+  },
+  "instances": 1,
+  "cpus": 0.1,
+  "mem": 128
+}
+
