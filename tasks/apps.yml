@@ -12,7 +12,7 @@
      validate_certs: "no"
      method: PUT
      HEADER_Content-Type: "application/json"
-     body: "{{mesos_consul_app_json}}"
+     body: "{{ lookup('template', 'templates/mesos-consul-app.json') }}"
      body_format: json
   register: result
   until: result.status == 200
@@ -32,7 +32,7 @@
      validate_certs: "no"
      method: PUT
      HEADER_Content-Type: "application/json"
-     body: "{{marathon_consul_app_json}}"
+     body: "{{ lookup('template', 'templates/marathon-consul-app.json') }}"
      body_format: json
   register: result
   until: result.status == 200
