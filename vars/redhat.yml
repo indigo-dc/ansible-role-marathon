@@ -1,0 +1,5 @@
+---
+# Package names and commands for EL
+openjdk_7_headless: java-1.7.0-openjdk-headless
+trust_anchor_root_dir: /etc/pki/ca-trust/source/anchors
+update_root_trust_anchor: update-ca-trust
