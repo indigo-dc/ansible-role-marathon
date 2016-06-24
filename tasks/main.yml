@@ -1,6 +1,16 @@
-- name: Install openjdk
-  apt: name="openjdk-7-jre-headless" state=present
+- name: Fail if the OS is not supported
+  fail:
+    msg="This role is not supported on {{ansible_distribution}}"
+  when: "ansible_distribution != 'Ubuntu' and ansible_os_family != 'RedHat'"
 
+- name: Include distribution-specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "vars/{{ ansible_distribution|lower }}.yml"
+    - "vars/{{ ansible_os_family|lower }}.yml"
+
+- name: Install OpenJDK 7
+  package: name="{{ openjdk_7_headless }}" state=present
 
 - name: Check that the certificates exists
   stat: path=marathon.key
@@ -38,7 +48,7 @@
       MARATHON_HTTPS_PORT: "{{ marathon_https_port }}"
       MARATHON_SSL_KEYSTORE_PASSWORD: "{{ marathon_jks_password }}"
       MARATHON_SSL_KEYSTORE_PATH: "{{ marathon_keystore_path }}"
-      MARATHON_HTTP_CREDENTIALS: "{{marathon_username}}:{{marathon_password}}"
+      MARATHON_HTTP_CREDENTIALS: "{{marathon_username}}:{{marathon_password|mandatory}}"
   tags: marathon
 
 
@@ -55,6 +65,7 @@
   retries: 3
   delay: 10
   changed_when: false
+  when: service_discovery == "consul"
   tags:
     - marathon
 

@@ -1,0 +1,5 @@
+---
+# Package names and commands for Ubuntu
+openjdk_7_headless: openjdk-7-jre-headless
+trust_anchor_root_dir: /usr/local/share/ca-certificates
+update_root_trust_anchor: update-ca-certificates
