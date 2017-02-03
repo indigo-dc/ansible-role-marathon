@@ -27,15 +27,39 @@
   when: marathon_key.stat.exists == False
   tags: marathon
 
+# Module "docker" is deprecated, use "docker_container" instead
+#- name: run marathon container
+#  docker:
+#    name: marathon
+#    image: "{{ marathon_image }}"
+#    state: reloaded
+#    detach: true
+#    restart_policy: always
+#    net: host
+#    volumes:
+#    - "{{ marathon_keystore_path }}:{{ marathon_keystore_path }}"
+#    env:
+#      MARATHON_HOSTNAME: "{{ marathon_hostname }}" 
+#      MARATHON_HTTP_ADDRESS: "{{ marathon_hostname }}" 
+#      MARATHON_HTTPS_ADDRESS: "{{ marathon_hostname }}"
+#      MARATHON_MASTER: "{{ marathon_master_peers }}"
+#      MARATHON_ZK: "{{ marathon_zk_peers }}/{{ marathon_framework_name }}" 
+#      MARATHON_FRAMEWORK_NAME: "{{ marathon_framework_name }}"
+#      MARATHON_HTTPS_PORT: "{{ marathon_https_port }}"
+#      MARATHON_SSL_KEYSTORE_PASSWORD: "{{ marathon_jks_password }}"
+#      MARATHON_SSL_KEYSTORE_PATH: "{{ marathon_keystore_path }}"
+#      MARATHON_HTTP_CREDENTIALS: "{{marathon_username}}:{{marathon_password|mandatory}}"
+#  tags: marathon
 
 - name: run marathon container
-  docker:
+  docker_container:
     name: marathon
     image: "{{ marathon_image }}"
-    state: reloaded
+    state: started
     detach: true
     restart_policy: always
-    net: host
+    network_mode: host
+    #published_ports: 8443
     volumes:
     - "{{ marathon_keystore_path }}:{{ marathon_keystore_path }}"
     env:
@@ -50,7 +74,6 @@
       MARATHON_SSL_KEYSTORE_PATH: "{{ marathon_keystore_path }}"
       MARATHON_HTTP_CREDENTIALS: "{{marathon_username}}:{{marathon_password|mandatory}}"
   tags: marathon
-
 
 - name: register marathon service with curl check
   uri: 
