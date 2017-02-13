@@ -24,7 +24,14 @@ marathon_zk_peers: "zk://{{ zookeeper_peers_nodes }}"
 
 # Note: marathon-consul checks the certificate CN against the host marathon.service.consul
 openssl_self_signed:
- - { name : "marathon.service.consul" }
+  name : "marathon.service.consul" 
+  country: "" 
+  state: "" 
+  city: ""
+  organization: "" 
+  unit: "" 
+  email: "" 
+
 marathon_key_password: "hCBWfORMLs6A"
 marathon_pkcs_password: "MLD6eQnjIVhj"
 marathon_jks_password: "ZpUEGgvzQhpo"
