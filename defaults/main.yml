@@ -21,6 +21,7 @@ marathon_server_zk_group: marathon_servers
 marathon_image: "indigodatacloud/marathon:{{ marathon_version }}"
 marathon_master_peers: "zk://{{ zookeeper_peers_nodes }}/mesos"
 marathon_zk_peers: "zk://{{ zookeeper_peers_nodes }}"
+marathon_libprocess_ip: "{{ ansible_default_ipv4.address }}"
 
 # Note: marathon-consul checks the certificate CN against the host marathon.service.consul
 openssl_self_signed:
