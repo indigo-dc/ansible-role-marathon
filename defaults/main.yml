@@ -13,7 +13,7 @@ zookeeper_peers_nodes: "
 "
 
 # defaults file for marathon
-marathon_version: 'latest'
+marathon_version: 'indigo_1'
 marathon_hostname: "{{ ansible_default_ipv4.address }}"
 marathon_framework_name: "marathon"
 marathon_port: '8080'
