@@ -1,0 +1,16 @@
+---
+- set_fact: marathonenv_template=marathon-env.j2
+
+- set_fact: marathonenv_template=marathon-ssl-env.j2
+  when: marathon_enable_ssl == True
+
+- set_fact: marathon_service_port={{marathon_http_port}}
+
+- set_fact: marathon_service_port={{marathon_https_port}}
+  when: marathon_enable_ssl == True
+
+- set_fact: marathon_protocol=http
+
+- set_fact: marathon_protocol=https
+  when: marathon_enable_ssl == True
+
