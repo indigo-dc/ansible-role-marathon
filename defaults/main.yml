@@ -16,14 +16,12 @@ zookeeper_peers_nodes: "
 marathon_version: 'latest'
 marathon_hostname: "{{ ansible_default_ipv4.address }}"
 marathon_framework_name: "marathon"
-marathon_port: '8080'
 marathon_server_zk_group: marathon_servers
 marathon_image: "indigodatacloud/marathon:{{ marathon_version }}"
 marathon_master_peers: "zk://{{ zookeeper_peers_nodes }}/mesos"
 marathon_zk_peers: "zk://{{ zookeeper_peers_nodes }}"
 marathon_libprocess_ip: "{{ ansible_default_ipv4.address }}"
 
-# Note: marathon-consul checks the certificate CN against the host marathon.service.consul
 openssl_self_signed:
   name : "marathon.service.consul" 
   country: "" 
@@ -33,16 +31,16 @@ openssl_self_signed:
   unit: "" 
   email: "" 
 
+marathon_enable_ssl: True
+marathon_enable_features: 'external_volumes'
 marathon_key_password: "hCBWfORMLs6A"
 marathon_pkcs_password: "MLD6eQnjIVhj"
 marathon_jks_password: "ZpUEGgvzQhpo"
 marathon_username: "admin"
 #marathon_password: "secr3t" --> MANDATORY PARAM
 marathon_https_port: '8443'
+marathon_http_port: '8080'
 marathon_keystore_path: '/etc/marathon/ssl_keystore.jks'
-
-marathon_consul_version: 'latest'
-marathon_consul_image: "ciscocloud/marathon-consul:{{marathon_consul_version}}"
 
 service_discovery: "consul"
 
