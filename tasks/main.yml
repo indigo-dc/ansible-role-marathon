@@ -1,8 +1,12 @@
+---
+- name: Set facts
+  include: facts.yml
+
 - name: Install openjdk
   apt: name="openjdk-7-jre-headless" state=present
 
 
-- name: Check that the certificates exists
+- name: Manage certificates to enable SSL 
   stat: path=marathon.key
   register: marathon_key
 - block:
@@ -14,32 +18,25 @@
         jks_password: "{{marathon_jks_password}}"
       include: enable_ssl.yml
     
-  when: marathon_key.stat.exists == False
+  when: marathon_enable_ssl == True and marathon_key.stat.exists == False
   tags: marathon
 
 
+- name: "Create marathon container env file"
+  template:
+    src={{marathonenv_template}} dest=/etc/marathon/.marathonenv
+
 - name: run marathon container
-  docker:
+  docker_container:
     name: marathon
     image: "{{ marathon_image }}"
-    state: reloaded
+    state: started
     detach: true
     restart_policy: always
-    net: host
+    network_mode: host
     volumes:
     - "{{ marathon_keystore_path }}:{{ marathon_keystore_path }}"
-    env:
-      LIBPROCESS_IP: "{{ marathon_libprocess_ip }}"
-      MARATHON_HOSTNAME: "{{ marathon_hostname }}" 
-      MARATHON_HTTP_ADDRESS: "{{ marathon_hostname }}" 
-      MARATHON_HTTPS_ADDRESS: "{{ marathon_hostname }}"
-      MARATHON_MASTER: "{{ marathon_master_peers }}"
-      MARATHON_ZK: "{{ marathon_zk_peers }}/{{ marathon_framework_name }}" 
-      MARATHON_FRAMEWORK_NAME: "{{ marathon_framework_name }}"
-      MARATHON_HTTPS_PORT: "{{ marathon_https_port }}"
-      MARATHON_SSL_KEYSTORE_PASSWORD: "{{ marathon_jks_password }}"
-      MARATHON_SSL_KEYSTORE_PATH: "{{ marathon_keystore_path }}"
-      MARATHON_HTTP_CREDENTIALS: "{{marathon_username}}:{{marathon_password}}"
+    env_file: /etc/marathon/.marathonenv
   tags: marathon
 
 
@@ -56,16 +53,17 @@
   retries: 3
   delay: 10
   changed_when: false
+  when: service_discovery == "consul"
   tags:
     - marathon
 
-#  consul:
-#    service_name: marathon
-#    service_port: "{{marathon_https_port}}"
-#    script: "curl -k -u {{marathon_username}}:{{marathon_password}} https://{{marathon_hostname}}:{{marathon_https_port}}"
-#    interval: 10s
-#    tags: marathon
 
-- include: apps.yml
-  when: service_discovery == "consul"
+#
+##  consul:
+##    service_name: marathon
+##    service_port: "{{marathon_https_port}}"
+##    script: "curl -k -u {{marathon_username}}:{{marathon_password}} https://{{marathon_hostname}}:{{marathon_https_port}}"
+##    interval: 10s
+##    tags: marathon
+#
 
