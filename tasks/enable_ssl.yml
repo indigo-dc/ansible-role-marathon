@@ -38,7 +38,7 @@
   file: path="{{ marathon_keystore_path | dirname }}" state=directory
 
 - name: generate keystore
-  command: keytool -importkeystore -srckeystore marathon.pkcs12 -srcalias marathon -srcstorepass $MARATHON_PKCS_PASSWORD -srcstoretype PKCS12 -destkeystore "{{ marathon_keystore_path}}" -deststorepass $MARATHON_JKS_PASSWORD
+  command: keytool -importkeystore -noprompt -srckeystore marathon.pkcs12 -srcalias marathon -srcstorepass $MARATHON_PKCS_PASSWORD -srcstoretype PKCS12 -destkeystore "{{ marathon_keystore_path}}" -deststorepass $MARATHON_JKS_PASSWORD
   environment: 
     MARATHON_PKCS_PASSWORD: "{{ pkcs_password }}"
     MARATHON_JKS_PASSWORD: "{{ jks_password }}"
