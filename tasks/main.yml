@@ -22,9 +22,14 @@
   tags: marathon
 
 
+- name: create etc directory
+  file: state=directory path=/etc/marathon
+  tags: marathon
+
 - name: "Create marathon container env file"
   template:
     src={{marathonenv_template}} dest=/etc/marathon/.marathonenv
+  tags: marathon
 
 - name: run marathon container
   docker_container:
