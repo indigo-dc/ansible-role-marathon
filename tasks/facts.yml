@@ -14,3 +14,16 @@
 - set_fact: marathon_protocol=https
   when: marathon_enable_ssl == True
 
+- set_fact: marathon_ext_vol_feature_name="external_volumes"
+
+- set_fact: marathon_features={{marathon_enable_features}}
+
+- set_fact: marathon_features={{marathon_ext_vol_feature_name}},{{marathon_features}} 
+  when: marathon_enable_external_volumes == True and marathon_features != ""
+
+- set_fact: marathon_features={{marathon_ext_vol_feature_name}}
+  when: marathon_enable_external_volumes == True and marathon_features == ""
+
+- debug: var=marathon_features
+
+
