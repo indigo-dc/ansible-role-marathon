@@ -32,7 +32,8 @@ openssl_self_signed:
   email: "" 
 
 marathon_enable_ssl: True
-marathon_enable_features: 'external_volumes'
+marathon_enable_external_volumes: False 
+marathon_enable_features: ""
 marathon_key_password: "hCBWfORMLs6A"
 marathon_pkcs_password: "MLD6eQnjIVhj"
 marathon_jks_password: "ZpUEGgvzQhpo"
