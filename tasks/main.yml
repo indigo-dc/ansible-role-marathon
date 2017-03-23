@@ -1,10 +1,11 @@
 ---
 - name: Set facts
   include: facts.yml
+  tags: marathon
 
 - name: Install openjdk
   apt: name="openjdk-7-jre-headless" state=present
-
+  tags: marathon
 
 - name: Manage certificates to enable SSL 
   stat: path=marathon.key
