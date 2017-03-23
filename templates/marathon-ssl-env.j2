@@ -8,4 +8,6 @@ MARATHON_HTTPS_PORT={{ marathon_https_port }}
 MARATHON_SSL_KEYSTORE_PASSWORD={{ marathon_jks_password }}
 MARATHON_SSL_KEYSTORE_PATH={{ marathon_keystore_path }}
 MARATHON_HTTP_CREDENTIALS={{marathon_username}}:{{marathon_password}}
-MARATHON_ENABLE_FEATURES={{marathon_enable_features}}
+{% if marathon_features != "" %}
+MARATHON_ENABLE_FEATURES={{marathon_features}}
+{% endif %}

@@ -6,4 +6,6 @@ MARATHON_MASTER={{ marathon_master_peers }}
 MARATHON_ZK={{ marathon_zk_peers }}/{{ marathon_framework_name }}
 MARATHON_FRAMEWORK_NAME={{ marathon_framework_name }}
 MARATHON_HTTP_CREDENTIALS={{marathon_username}}:{{marathon_password}}
-MARATHON_ENABLE_FEATURES={{marathon_enable_features}}
+{% if marathon_features != "" %}
+MARATHON_ENABLE_FEATURES={{marathon_features}}
+{% endif %}
