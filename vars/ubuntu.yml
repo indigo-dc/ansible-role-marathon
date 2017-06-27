@@ -1,2 +1,4 @@
 ---
 openjdk_package: "{% if ansible_distribution_version | version_compare('14.04', '<=') %}openjdk-7-jre-headless{% else %}openjdk-8-jre-headless{% endif %}"
+trust_anchor_root_dir: /usr/local/share/ca-certificates
+update_root_trust_anchor: update-ca-certificates
