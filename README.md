@@ -5,6 +5,7 @@ Configure and start Marathon (Mesos Framework) in a docker container using the i
 
 This role has been specifically developed to be used for the deployment of Mesos in the framework of INDIGO-DataCloud project.
 
+
 Role Variables
 --------------
 
