@@ -27,5 +27,3 @@
   when: marathon_enable_gpu_support == true
 
 - debug: var=marathon_features
-
-

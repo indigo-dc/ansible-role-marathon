@@ -23,7 +23,7 @@ marathon_zk_peers: "zk://{{ zookeeper_peers_nodes }}"
 marathon_libprocess_ip: "{{ ansible_default_ipv4.address }}"
 
 openssl_self_signed:
-  name : "marathon.service.consul" 
+  name: "marathon.service.consul" 
   country: "" 
   state: "" 
   city: ""
@@ -45,4 +45,3 @@ marathon_http_port: '8080'
 marathon_keystore_path: '/etc/marathon/ssl_keystore.jks'
 
 service_discovery: "consul"
-
