@@ -16,4 +16,4 @@ galaxy_info:
    - marathon
 
 dependencies: 
-   - { role: indigo-dc.docker }
+#   - { role: indigo-dc.docker }
