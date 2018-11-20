@@ -17,7 +17,8 @@ marathon_version: '1.6.322'
 marathon_hostname: "{{ ansible_default_ipv4.address }}"
 marathon_framework_name: "marathon"
 marathon_server_zk_group: marathon_servers
-marathon_image: "indigodatacloud/marathon:{{ marathon_version }}"
+# marathon_image: "indigodatacloud/marathon:{{ marathon_version }}"
+marathon_image: "dodasts/marathon:{{ marathon_version }}"
 marathon_master_peers: "zk://{{ zookeeper_peers_nodes }}/mesos"
 marathon_zk_peers: "zk://{{ zookeeper_peers_nodes }}"
 marathon_libprocess_ip: "{{ ansible_default_ipv4.address }}"
