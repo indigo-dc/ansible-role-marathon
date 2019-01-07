@@ -44,4 +44,3 @@
   environment: 
     MARATHON_PKCS_PASSWORD: "{{ pkcs_password }}"
     MARATHON_JKS_PASSWORD: "{{ jks_password }}"
-

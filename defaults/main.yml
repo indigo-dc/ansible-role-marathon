@@ -13,7 +13,7 @@ zookeeper_peers_nodes: "
 "
 
 # defaults file for marathon
-marathon_version: 'latest'
+marathon_version: '1.5.6'
 marathon_hostname: "{{ ansible_default_ipv4.address }}"
 marathon_framework_name: "marathon"
 marathon_server_zk_group: marathon_servers
@@ -23,7 +23,7 @@ marathon_zk_peers: "zk://{{ zookeeper_peers_nodes }}"
 marathon_libprocess_ip: "{{ ansible_default_ipv4.address }}"
 
 openssl_self_signed:
-  name : "marathon.service.consul" 
+  name: "marathon.service.consul" 
   country: "" 
   state: "" 
   city: ""
@@ -33,7 +33,8 @@ openssl_self_signed:
 
 marathon_enable_ssl: True
 marathon_enable_external_volumes: False 
-marathon_enable_features: ""
+marathon_enable_gpu_support: False
+marathon_enable_features: []
 marathon_key_password: "hCBWfORMLs6A"
 marathon_pkcs_password: "MLD6eQnjIVhj"
 marathon_jks_password: "ZpUEGgvzQhpo"
@@ -44,4 +45,3 @@ marathon_http_port: '8080'
 marathon_keystore_path: '/etc/marathon/ssl_keystore.jks'
 
 service_discovery: "consul"
-
