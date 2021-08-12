@@ -17,3 +17,4 @@ galaxy_info:
 
 dependencies: 
    - { role: indigo-dc.docker }
+   - { role: geerlingguy.certbot, when: marathon_ssl_cert_gen == 'letsencrypt' }

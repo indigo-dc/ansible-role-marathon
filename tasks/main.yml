@@ -18,9 +18,6 @@
   package: name="{{openjdk_package}}" state=present
   tags: marathon
 
-- name: Manage certificates to enable SSL 
-  stat: path=marathon.key
-  register: marathon_key
 - block:
 
     - name: generate keystore
@@ -30,7 +27,7 @@
         jks_password: "{{marathon_jks_password}}"
       include: enable_ssl.yml
     
-  when: marathon_enable_ssl == True and marathon_key.stat.exists == False
+  when: marathon_enable_ssl|bool
   tags: marathon
 
 
@@ -56,30 +53,3 @@
     env_file: /etc/marathon/.marathonenv
   tags: marathon
 
-
-- name: register marathon service with curl check
-  uri: 
-     url: "http://localhost:8500/v1/agent/service/register"
-     validate_certs: "no"
-     method: PUT
-     HEADER_Content-Type: "application/json"
-     body: "{{ lookup('template', 'templates/marathon-service.json') }}"
-     body_format: json
-  register: result
-  until: result.status == 200
-  retries: 3
-  delay: 10
-  changed_when: false
-  when: service_discovery == "consul"
-  tags:
-    - marathon
-
-
-#
-##  consul:
-##    service_name: marathon
-##    service_port: "{{marathon_https_port}}"
-##    script: "curl -k -u {{marathon_username}}:{{marathon_password}} https://{{marathon_hostname}}:{{marathon_https_port}}"
-##    interval: 10s
-##    tags: marathon
-#

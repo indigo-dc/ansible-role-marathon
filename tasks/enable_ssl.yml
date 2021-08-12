@@ -15,23 +15,50 @@
    - rootCA.crt
    - rootCA.key
 
-- name: create ssl signed key
-  command: openssl genrsa -des3 -out marathon.key -passout "env:MARATHON_KEY_PASSWORD"
-  environment:
-    MARATHON_KEY_PASSWORD: "{{ key_password }}"
+- name: Generate a Self Signed certificate
+  block:      
+    - openssl_privatekey:
+        path: "{{ marathon_ssl_key_file }}"
+        passphrase: "{{ key_password }}"
+        cipher: auto
 
-- name: generate a CSR
-  command: openssl req -new -key marathon.key -passin "env:MARATHON_KEY_PASSWORD" -subj "/C={{ openssl_self_signed.country }}/ST={{ openssl_self_signed.state }}/L={{ openssl_self_signed.city }}/O={{ openssl_self_signed.organization }}/OU={{ openssl_self_signed.unit }}/CN={{ openssl_self_signed.name }}/emailAddress={{ openssl_self_signed.email }}/" -out marathon.csr
-  environment:
-    MARATHON_KEY_PASSWORD: "{{ key_password }}"
+    - openssl_csr:
+        path: "{{ marathon_ssl_csr_file }}"
+        privatekey_path: "{{ marathon_ssl_key_file }}"
+        privatekey_passphrase: "{{ key_password }}"
+        common_name: "{{ openssl_self_signed.name }}"
+        country_name: "{{ openssl_self_signed.country }}"
+        organization_name: "{{ openssl_self_signed.organization }}"
+        organizational_unit_name: "{{ openssl_self_signed.unit }}" 
+        state_or_province_name: "{{ openssl_self_signed.state }}"
+        email_address: "{{ openssl_self_signed.email }}"
 
-- name: generate and sign cert
-  command: openssl x509 -req -in marathon.csr -passin "env:MARATHON_KEY_PASSWORD" -CA /tmp/rootCA.crt -CAkey /tmp/rootCA.key -CAcreateserial -out marathon.pem -days 3650
-  environment:
-    MARATHON_KEY_PASSWORD: "{{ key_password }}"
+    - openssl_certificate:
+        provider: ownca
+        path: "{{ marathon_ssl_cert_file }}"
+        privatekey_path: "{{ marathon_ssl_key_file }}"
+        privatekey_passphrase: "{{ key_password }}"
+        csr_path: "{{ marathon_ssl_csr_file }}"
+        ownca_path: /tmp/rootCA.crt
+        ownca_privatekey_path: /tmp/rootCA.key
+  when: marathon_ssl_cert_gen == "self_signed"
+
+
+- include_role:
+    name: geerlingguy.certbot
+  vars:  
+    certbot_auto_renew: true
+    certbot_create_if_missing: true
+    certbot_create_method: standalone
+    certbot_admin_email: "{{ marathon_certbot_admin_email }}"
+    certbot_certs:
+      - domains:
+          - "{{ marathon_dns_name }}"  
+  when: marathon_ssl_cert_gen == "letsencrypt"     
+
 
 - name: extract pcks12
-  command: openssl pkcs12 -inkey marathon.key -passin "env:MARATHON_KEY_PASSWORD" -name marathon -in marathon.pem -password "env:MARATHON_PKCS_PASSWORD" -export -out marathon.pkcs12
+  command: openssl pkcs12 -inkey "{{ marathon_ssl_key_file }}" -passin "env:MARATHON_KEY_PASSWORD" -name marathon -in "{{ marathon_ssl_cert_file }}" -password "env:MARATHON_PKCS_PASSWORD" -export -out marathon.pkcs12
   environment:
     MARATHON_KEY_PASSWORD: "{{ key_password }}"
     MARATHON_PKCS_PASSWORD: "{{ pkcs_password }}"

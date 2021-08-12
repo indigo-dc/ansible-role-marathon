@@ -13,17 +13,17 @@ zookeeper_peers_nodes: "
 "
 
 # defaults file for marathon
-marathon_version: '1.5.6'
+marathon_version: '1.8.244'
 marathon_hostname: "{{ ansible_default_ipv4.address }}"
 marathon_framework_name: "marathon"
 marathon_server_zk_group: marathon_servers
-marathon_image: "indigodatacloud/marathon:{{ marathon_version }}"
+marathon_image: "marica/marathon:{{ marathon_version }}"
 marathon_master_peers: "zk://{{ zookeeper_peers_nodes }}/mesos"
 marathon_zk_peers: "zk://{{ zookeeper_peers_nodes }}"
 marathon_libprocess_ip: "{{ ansible_default_ipv4.address }}"
 
 openssl_self_signed:
-  name: "marathon.service.consul" 
+  name: "{{ marathon_hostname }}" 
   country: "" 
   state: "" 
   city: ""
@@ -43,5 +43,10 @@ marathon_username: "admin"
 marathon_https_port: '8443'
 marathon_http_port: '8080'
 marathon_keystore_path: '/etc/marathon/ssl_keystore.jks'
-
-service_discovery: "consul"
+marathon_ssl_cert_file: "{% if marathon_ssl_cert_gen == 'letsencrypt' %}/etc/letsencrypt/live/{{marathon_dns_name}}/fullchain.pem{% else %}/etc/marathon/server.crt{% endif %}" 
+marathon_ssl_key_file: "{% if marathon_ssl_cert_gen == 'letsencrypt' %}/etc/letsencrypt/live/{{marathon_dns_name}}/privkey.pem{% else %}/etc/marathon/server.key{% endif %}"        
+marathon_ssl_csr_file: /etc/marathon/server.csr
+#marathon_ssl_cert_gen - allowed-values = self_signed, letsencrypt, none
+marathon_ssl_cert_gen: self_signed
+marathon_dns_name:
+marathon_certbot_admin_email:         
