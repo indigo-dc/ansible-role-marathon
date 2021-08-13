@@ -18,6 +18,10 @@
   package: name="{{openjdk_package}}" state=present
   tags: marathon
 
+- name: create etc directory
+  file: state=directory path=/etc/marathon
+  tags: marathon
+  
 - block:
 
     - name: generate keystore
@@ -31,9 +35,6 @@
   tags: marathon
 
 
-- name: create etc directory
-  file: state=directory path=/etc/marathon
-  tags: marathon
 
 - name: "Create marathon container env file"
   template:
