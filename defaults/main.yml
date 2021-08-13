@@ -48,5 +48,6 @@ marathon_ssl_key_file: "{% if marathon_ssl_cert_gen == 'letsencrypt' %}/etc/lets
 marathon_ssl_csr_file: /etc/marathon/server.csr
 #marathon_ssl_cert_gen - allowed-values = self_signed, letsencrypt, none
 marathon_ssl_cert_gen: self_signed
-marathon_dns_name:
+# marathon_dns_name is used only for letsencrypt cert generation
+marathon_dns_name: "{{ marathon_hostname }}"
 marathon_certbot_admin_email:         
